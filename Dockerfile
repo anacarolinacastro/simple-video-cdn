@@ -41,7 +41,7 @@ RUN set -x && \
   make && \
   make install
 
-COPY nginx.conf /config/
+COPY nginx-origin.conf /config/nginx.conf
 
 WORKDIR /
 CMD "nginx"
