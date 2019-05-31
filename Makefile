@@ -9,3 +9,6 @@ run:
 
 ingest:
 	docker run  --net="host" --rm -v $(shell pwd):/files jrottenberg/ffmpeg:4.1 -re -i /files/videos/Big_Buck_Bunny_360_10s_1MB.mp4 -bsf:v h264_mp4toannexb -c copy -f mpegts http://127.0.0.1:8080/ingest/bbb
+
+benchmark:
+	docker run --net="host" --rm williamyeh/wrk -t12 -c400 -d30s http://0.0.0.0:80/live/hls/bbb2/index.m3u8
