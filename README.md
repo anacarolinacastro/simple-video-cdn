@@ -27,16 +27,16 @@ make run
 make ingest
 ```
 
-Or ingest another video to http://0.0.0.0:8080/ingest/singal-1.
+Or ingest another video to http://0.0.0.0:8080/ingest/signal-1.
 
 #### Consume
 - Consume the HLS playlist:
 ```bash
-curl -s http://0.0.0.0:8080/live/hls/singal-1/index.m3u8
+curl -s http://0.0.0.0:8080/live/hls/signal-1/index.m3u8
 ```
 - Consume the Dash play list:
 ```bash
-curl -s http://0.0.0.0:8080/live/dash/singal-1/index.mpd
+curl -s http://0.0.0.0:8080/live/dash/signal-1/index.mpd
 ```
 
 ## Built With
