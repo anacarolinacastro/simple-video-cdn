@@ -22,21 +22,21 @@ make run
 
 
 #### Ingest
-- Ingest 10 seconds of the clip 'Big Buck Bunny':
+- Ingest video from ffmpeg filter:
 ```bash
 make ingest
 ```
 
-Or ingest another video to http://0.0.0.0:8080/ingest/bbb.
+Or ingest another video to http://0.0.0.0:8080/ingest/singal-1.
 
 #### Consume
 - Consume the HLS playlist:
 ```bash
-curl -s http://0.0.0.0:8080/live/hls/bbb/index.m3u8
+curl -s http://0.0.0.0:8080/live/hls/singal-1/index.m3u8
 ```
 - Consume the Dash play list:
 ```bash
-curl -s http://0.0.0.0:8080/live/dash/bbb/index.mpd
+curl -s http://0.0.0.0:8080/live/dash/singal-1/index.mpd
 ```
 
 ## Built With
