@@ -5,7 +5,7 @@ run-origin: build-origin
 	docker run -it -p 1935:1935 -p 8080:8080 --rm nginx-rtmp
 
 run:
-	docker-compose up --scale cache=2
+	CACHE_PORTS_RANGE=8090-8091 docker-compose up --scale cache=2
 
 ingest:
 	docker run --net="host" --rm -v $(shell pwd):/files jrottenberg/ffmpeg:4.1 -hide_banner \
