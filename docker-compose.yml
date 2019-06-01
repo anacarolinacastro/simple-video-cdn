@@ -24,7 +24,7 @@ services:
     depends_on:
       - origin
   origin:
-    build: .
+    build: ./origin
     ports:
       - "8080:8080"
   redis:
