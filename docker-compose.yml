@@ -18,7 +18,7 @@ services:
     volumes:
       - "./nginx-cache.conf:/usr/local/openresty/nginx/conf/nginx.conf"
     ports:
-      - "8080"
+      - "8090-8099:8080"
     depends_on:
       - origin
   origin:
