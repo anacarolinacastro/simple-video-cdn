@@ -1,20 +1,28 @@
-local function round_robin ()
+local load_balancer = {}
+
+local function get_algoritm()
+    return os.getenv("LB_ALGORITM")
 end
 
-local function lead_conn ()
+
+load_balancer.cache = function()
+    return load_balancer[os.getenv("LB_ALGORITM")]()
 end
 
-local function choose_host_hash ()
+load_balancer.round_robin = function()
+    return "0.0.0.0:8090"
 end
 
-local function choose_host_consistent_hash ()
+load_balancer.least_conn = function()
 end
 
-local function choose_host_consistent_hash_bound_load ()
+load_balancer.choose_host_hash = function()
 end
 
-local function process()
-  ngx.say('the spice must flow')
+load_balancer.choose_host_consistent_hash = function()
 end
 
-return process
+load_balancer.choose_host_consistent_hash_bound_load = function()
+end
+
+return load_balancer

@@ -13,7 +13,9 @@ services:
     depends_on:
       - cache
       - redis
-  
+    environment:
+      LB_ALGORITM: "${LB_ALGORITM}"
+
   cache:
     image: openresty/openresty:alpine
     links:
@@ -29,7 +31,7 @@ services:
     build: ./origin
     ports:
       - "8080:8080"
-  
+
   redis:
     image: redis
 
@@ -47,4 +49,3 @@ services:
       - redis
     environment:
       CACHE_PORTS_RANGE: "${CACHE_PORTS_RANGE}"
-    

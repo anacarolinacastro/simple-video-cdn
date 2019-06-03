@@ -1,5 +1,6 @@
 CACHE_PORTS_RANGE ?= 8090-8091
 CACHE_POOL_SIZE ?= 2
+LB_ALGORITM ?= round_robin
 
 build-origin:
 	docker build -t nginx-rtmp .
@@ -8,10 +9,10 @@ run-origin: build-origin
 	docker run -it -p 1935:1935 -p 8080:8080 --rm nginx-rtmp
 
 run:
-	CACHE_PORTS_RANGE=$(CACHE_PORTS_RANGE) docker-compose up --scale cache=$(CACHE_POOL_SIZE)
+	LB_ALGORITM=$(LB_ALGORITM) CACHE_PORTS_RANGE=$(CACHE_PORTS_RANGE) docker-compose up --scale cache=$(CACHE_POOL_SIZE)
 
 down:
-	CACHE_PORTS_RANGE=$(CACHE_PORTS_RANGE) docker-compose down
+	LB_ALGORITM=$(LB_ALGORITM) CACHE_PORTS_RANGE=$(CACHE_PORTS_RANGE) docker-compose down
 
 ingest:
 	docker run --net="host" --rm -v $(shell pwd):/files jrottenberg/ffmpeg:4.1 -hide_banner \
