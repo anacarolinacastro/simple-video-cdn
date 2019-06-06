@@ -38,7 +38,7 @@ services:
       - "6379:6379"
 
   healthchecker:
-    image: golang:1.11-alpine
+    image: golang:1.12
     volumes:
       - ./healthchecker:/app
     working_dir: /app
