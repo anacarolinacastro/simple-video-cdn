@@ -7,10 +7,13 @@ import (
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/go-redis/redis"
 )
 
 // PORTS correspond to the cache ports range
 var PORTS = getEnv("CACHE_PORTS_RANGE", "8090-8091")
+var redisClient = getRedis()
 
 func main() {
 	firstPort, lastPort := portsRange()
@@ -22,9 +25,24 @@ func main() {
 	}
 }
 
+func getRedis() *redis.Client {
+	client := redis.NewClient(&redis.Options{
+		Addr:     "localhost:6379",
+		Password: "",
+		DB:       0,
+	})
+
+	return client
+}
+
+func setHealth(port, health string) {
+	redisClient.Set(port, health, 0)
+}
+
 func healthcheck(port int) {
 	server := fmt.Sprintf("http://0.0.0.0:%d", port)
 	_, status := checkhealth(server)
+	setHealth(fmt.Sprint(port), status)
 	fmt.Printf("Server %s is %s\n", server, status)
 }
 
