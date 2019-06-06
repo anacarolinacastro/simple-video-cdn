@@ -14,7 +14,7 @@ end
 
 load_balancer.round_robin = function()
     ports = get_health_servers()
-    port = ports[math.random(1,2)]
+    port = ports[math.random(1,#ports)]
 
     return "0.0.0.0:" .. port
 end
