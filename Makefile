@@ -8,7 +8,10 @@ build-origin:
 run-origin: build-origin
 	docker run -it -p 1935:1935 -p 8080:8080 --rm nginx-rtmp
 
-run:
+build:
+	LB_ALGORITM=$(LB_ALGORITM) CACHE_PORTS_RANGE=$(CACHE_PORTS_RANGE) docker-compose build
+
+run: build
 	LB_ALGORITM=$(LB_ALGORITM) CACHE_PORTS_RANGE=$(CACHE_PORTS_RANGE) docker-compose up --scale cache=$(CACHE_POOL_SIZE)
 
 down:
