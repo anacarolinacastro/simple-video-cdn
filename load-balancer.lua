@@ -4,13 +4,19 @@ local function get_algoritm()
     return os.getenv("LB_ALGORITM")
 end
 
-
 load_balancer.cache = function()
     return load_balancer[os.getenv("LB_ALGORITM")]()
 end
 
+function get_health_servers()
+    return {"8090", "8091"}
+end
+
 load_balancer.round_robin = function()
-    return "0.0.0.0:8090"
+    ports = get_health_servers()
+    port = ports[math.random(1,2)]
+
+    return "0.0.0.0:" .. port
 end
 
 load_balancer.least_conn = function()
