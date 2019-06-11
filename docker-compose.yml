@@ -3,10 +3,9 @@ version: '3'
 services:
   lb:
     build: ./lb
-    links:
-      - cache
     ports:
       - "80:8080"
+    network_mode: "host"
     depends_on:
       - cache
       - redis
