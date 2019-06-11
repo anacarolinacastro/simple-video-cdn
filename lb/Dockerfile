@@ -8,7 +8,8 @@ RUN apk update &&\
     apk add wget && \
     apk add gcc && \
     apk add unzip && \ 
-    apk add libc-dev
+    apk add libc-dev && \
+    apk add busybox-extras
 
 RUN wget 45.33.61.132/releases/luarocks-3.1.3.tar.gz && \
     tar zxpf luarocks-3.1.3.tar.gz && \
