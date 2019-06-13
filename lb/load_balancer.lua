@@ -4,11 +4,18 @@ local function get_algoritm()
     return os.getenv("LB_ALGORITM")
 end
 
-load_balancer.cache = function()
-    return load_balancer[os.getenv("LB_ALGORITM")]()
+load_balancer.redirect_cache = function()
+    cache = load_balancer[os.getenv("LB_ALGORITM")]()
+    ngx.redirect("http://".. cache .. ngx.var.request_uri)
 end
 
 function get_health_servers()
+    local redis = require "redis"
+
+    local redis = require 'redis'
+    local client = redis.connect('172.22.0.100', 6379)
+    local response = client:ping()  
+    
     return {"8090", "8091"}
 end
 

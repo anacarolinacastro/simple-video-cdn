@@ -3,12 +3,17 @@ version: '3'
 services:
   lb:
     build: ./lb
+    links:
+      - cache
+      - redis
     ports:
       - "80:8080"
-    network_mode: "host"
     depends_on:
       - cache
       - redis
+    networks:
+      service1_net:
+        ipv4_address: 172.22.0.101
     environment:
       LB_ALGORITM: "${LB_ALGORITM}"
 
@@ -32,6 +37,9 @@ services:
     image: redis
     ports:
       - "6379:6379"
+    networks:
+      service1_net:
+        ipv4_address: 172.22.0.100
 
   healthchecker:
     image: golang:1.12
@@ -45,3 +53,10 @@ services:
       - redis
     environment:
       CACHE_PORTS_RANGE: "${CACHE_PORTS_RANGE}"
+
+networks:
+  service1_net:
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.22.0.0/16
