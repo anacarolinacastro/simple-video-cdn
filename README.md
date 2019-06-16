@@ -1,4 +1,4 @@
-# Simple Video CDN
+#[WIP] Simple Video CDN
 A minimal CDN for load balance studies purposes.
 
 ![Architecture](/images/architecture.png)
@@ -7,9 +7,10 @@ A minimal CDN for load balance studies purposes.
 #### Docker services
 
 - *simple-video-cdn_origin_1:* packager/origin
-- *simple-video-cdn_cache_1:* cache server 1
-- *simple-video-cdn_cache_2:* cache server 2
+- *simple-video-cdn_cache_N:* cache server N
 - *simple-video-cdn_lb_1:* load balancer
+- *simple-video-cdn_healthchecker_1:* go application that do the health check
+- *simple-video-cdn_redis_1*: redis db that stores the health and load data
 
 
 ## Running
@@ -32,11 +33,11 @@ Or ingest another video to http://0.0.0.0:8080/ingest/signal-1.
 #### Consume
 - Consume the HLS playlist:
 ```bash
-curl -s http://0.0.0.0:8080/live/hls/signal-1/index.m3u8
+curl -s http://0.0.0.0:80/live/hls/signal-1/index.m3u8
 ```
 - Consume the Dash play list:
 ```bash
-curl -s http://0.0.0.0:8080/live/dash/signal-1/index.mpd
+curl -s http://0.0.0.0:80/live/dash/signal-1/index.mpd
 ```
 
 ## Built With
