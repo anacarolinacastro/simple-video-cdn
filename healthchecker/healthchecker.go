@@ -1,7 +1,9 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"net/http"
 	"os"
 	"strconv"
@@ -15,11 +17,25 @@ import (
 var PORTS = getEnv("CACHE_PORTS_RANGE", "8090-8091")
 var redisClient = getRedis()
 
+type Status struct {
+	Connection Connection `json:"connections"`
+}
+
+type Connection struct {
+	Active   int `json:"active"`
+	Reading  int `json:"reading"`
+	Writing  int `json:"writing"`
+	Waiting  int `json:"waiting"`
+	Accepted int `json:"accepted"`
+	Handled  int `json:"handled"`
+	Requests int `json:"requests"`
+}
+
 func main() {
 	firstPort, lastPort := portsRange()
 	for {
 		for port := firstPort; port <= lastPort; port++ {
-			go healthcheck(port)
+			go statusCheck(port)
 		}
 		time.Sleep(10 * time.Second)
 	}
@@ -35,26 +51,34 @@ func getRedis() *redis.Client {
 	return client
 }
 
-func setHealth(port, health string) {
-	redisClient.Set(port, health, 0)
+func setLoad(port, value string) {
+	key := port
+	redisClient.Set(key, value, 10*time.Second)
 }
 
-func healthcheck(port int) {
+func statusCheck(port int) {
 	server := fmt.Sprintf("http://0.0.0.0:%d", port)
-	_, status := checkhealth(server)
-	setHealth(fmt.Sprint(port), status)
-	fmt.Printf("Server %s is %s\n", server, status)
+	serverUp, status := vtsStatus(server)
+	if serverUp {
+		setLoad(fmt.Sprint(port), fmt.Sprint(status.Connection.Active))
+		fmt.Printf("Server %s has load %d\n", server, status.Connection.Active)
+	}
 }
 
-func checkhealth(server string) (bool, string) {
-	resp, err := http.Get(server + "/healthcheck")
+func vtsStatus(server string) (bool, Status) {
+	resp, err := http.Get(server + "/status")
 
 	if err == nil && resp.StatusCode == 200 {
-		return true, "up"
+		var status Status
+
+		body, _ := ioutil.ReadAll(resp.Body)
+		json.Unmarshal(body, &status)
+
+		return true, status
 	}
 	fmt.Printf("%#v\n", err.Error())
 
-	return false, "down"
+	return false, Status{}
 }
 
 func getEnv(key, defaultValue string) string {
