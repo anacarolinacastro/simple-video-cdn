@@ -7,10 +7,8 @@ end
 
 load_balancer.cache = function()
     cache = load_balancer[os.getenv("LB_ALGORITM")]()
-    ngx.log(ngx.ERR, ngx.var.uriasdf)
-    uri = cache .. ngx.var.uriasdf
-    -- return cache
-    return ngx.redirect(cache);
+
+    return ngx.redirect(cache .. ngx.var.uri);
 end
 
 function get_health_servers()
