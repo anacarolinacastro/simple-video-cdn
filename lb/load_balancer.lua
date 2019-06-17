@@ -6,7 +6,7 @@ local function get_algoritm()
 end
 
 load_balancer.cache = function()
-    cache = load_balancer[os.getenv("LB_ALGORITM")]()
+    local cache = load_balancer[os.getenv("LB_ALGORITM")]()
 
     return ngx.redirect(cache .. ngx.var.uri);
 end
@@ -21,17 +21,17 @@ function get_health_servers()
 end
 
 load_balancer.random = function()
-    ports = get_health_servers()
-    port = ports[math.random(1,#ports)]
+    local ports = get_health_servers()
+    local port = ports[math.random(1,#ports)]
 
     return "http://0.0.0.0:" .. port
 end
 
 load_balancer.round_robin = function()
-    ports = get_health_servers()
-    port_index = math.fmod(index_reference,#ports) + 1
-    port = ports[port_index]
-    index_reference = index_reference + 1
+    local ports = get_health_servers()
+    local port_index = math.fmod(index_reference,#ports) + 1
+    local port = ports[port_index]
+    local index_reference = index_reference + 1
 
     return "http://0.0.0.0:" .. port
 end
