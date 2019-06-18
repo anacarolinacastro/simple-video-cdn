@@ -44,7 +44,10 @@ curl -s http://0.0.0.0:80/live/dash/signal-1/index.mpd
 - [ffmpeg](https://github.com/FFmpeg/FFmpeg) - audio/video handler
 - [nginx](https://github.com/nginx/nginx) - HTTP server and reverse proxy
 - [nginx-ts-module](https://github.com/arut/nginx-ts-module) - receives MPEG-TS and serves HLS and DASH over HTTP
+- [nginx-module-vts](https://github.com/vozlt/nginx-module-vts) - fetch host traffic status
+- [Golang](https://golang.org/) - compiled language
 - [Lua](https://www.lua.org/) - script language
+- [Redis](https://redis.io/) - in-memory database
 
 ## Authors
 Ana Carolina Castro - Initial work - Globo.com
