@@ -61,7 +61,7 @@ func statusCheck(port int) {
 	serverUp, status := vtsStatus(server)
 	if serverUp {
 		setLoad(fmt.Sprint(port), fmt.Sprint(status.Connection.Active))
-		fmt.Printf("Server %s has load %d\n", server, status.Connection.Active)
+		// fmt.Printf("Server %s has load %d\n", server, status.Connection.Active)
 	}
 }
 

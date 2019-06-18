@@ -16,6 +16,7 @@ services:
         ipv4_address: 172.22.0.101
     environment:
       LB_ALGORITM: "${LB_ALGORITM}"
+      CACHE_PORTS_RANGE: "${CACHE_PORTS_RANGE}"
 
   cache:
     image: marrotte/openresty-vts-sts
