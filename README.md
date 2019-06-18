@@ -1,4 +1,4 @@
-#[WIP] Simple Video CDN
+# [WIP] Simple Video CDN
 A minimal CDN for load balance studies purposes.
 
 ![Architecture](/images/architecture.png)
