@@ -1,9 +1,7 @@
+local redis = require "resty.redis"
+
 local load_balancer = {}
 local index_reference = 1
-
-local redis = require "resty.redis"
-local red = redis:new()
-local ok, err = red:connect("172.22.0.100", 6379)
 
 local function get_algoritm()
     return os.getenv("LB_ALGORITM")
@@ -22,6 +20,10 @@ local function get_ports_range()
 end
 
 function get_health_servers()
+    local red = redis:new()
+    red:set_timeout(1000)
+    red:connect("172.22.0.100", 6379)
+
     local first, last = get_ports_range()
     local a = {}
 
@@ -34,6 +36,7 @@ function get_health_servers()
         end
     end
 
+    red:set_keepalive(10000, 100)
     return a
 end
 
@@ -54,7 +57,7 @@ load_balancer.round_robin = function()
     local ports = get_health_servers()
     local port_index = math.fmod(index_reference,#ports) + 1
     local port = ports[port_index]
-    local index_reference = index_reference + 1
+    index_reference = index_reference + 1
 
     return "http://0.0.0.0:" .. port
 end
