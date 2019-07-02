@@ -29,4 +29,4 @@ ingest:
         -window_size 5  -extra_window_size 10 -remove_at_exit 1 -adaptation_sets "id=0,streams=v id=1,streams=a" -f mpegts http://127.0.0.1:8080/ingest/signal-1
 
 benchmark:
-	docker run --net="host" --rm williamyeh/wrk -t12 -c400 -d30s http://0.0.0.0:80/live/hls/signal-1/index.m3u8
+	docker run --net="host" --rm anafrombr/go-wrk -redir -c 100 -d 30  http://0.0.0.0:80/live/hls/signal-1/index.m3u8
