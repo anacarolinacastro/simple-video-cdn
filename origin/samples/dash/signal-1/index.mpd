@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<MPD
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="urn:mpeg:DASH:schema:MPD:2011"
+    xsi:schemaLocation="urn:mpeg:DASH:schema:MPD:2011 DASH-MPD.xsd"
+    type="dynamic"
+    availabilityStartTime="2019-07-02T11:20:08Z"
+    publishTime="2019-07-02T11:20:21Z"
+    minimumUpdatePeriod="PT5S"
+    minBufferTime="PT5S"
+    timeShiftBufferDepth="PT21S"
+    profiles="urn:hbbtv:dash:profile:isoff-live:2012,urn:mpeg:dash:profile:isoff-live:2011">
+  <Period
+      id="0"
+      start="PT0S">
+    <AdaptationSet
+        segmentAlignment="true"
+        mimeType="video/mp4">
+      <Representation
+          id="256"
+          codecs="avc1.64001F"
+          bandwidth="1536238">
+        <SegmentTemplate
+            timescale="90000"
+            media="$RepresentationID$.$Time$.mp4"
+            initialization="$RepresentationID$.init.mp4">
+          <SegmentTimeline>
+            <S t="126000" d="450000"/>
+            <S t="576000" d="450000"/>
+            <S t="1026000" d="450000"/>
+            <S t="1476000" d="231000"/>
+          </SegmentTimeline>
+        </SegmentTemplate>
+      </Representation>
+    </AdaptationSet>
+  </Period>
+</MPD>

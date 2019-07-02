@@ -31,6 +31,8 @@ services:
 
   origin:
     build: ./origin
+    volumes:
+      - "./origin/samples:/var/media"
     ports:
       - "8080:8080"
 
