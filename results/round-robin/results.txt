@@ -1,0 +1,35 @@
+8090
+  cache status  count
+0          hit   8657
+1      expired      4
+2         miss      0
+--------------------------------------
+
+8091
+  cache status  count
+0          hit   8655
+1      expired      4
+2         miss      0
+--------------------------------------
+
+8092
+  cache status  count
+0          hit   8656
+1      expired      4
+2         miss      0
+--------------------------------------
+
+8093
+  cache status  count
+0          hit   8654
+1      expired      3
+2         miss      1
+--------------------------------------
+
+8094
+  cache status  count
+0          hit   8657
+1      expired      4
+2         miss      0
+--------------------------------------
+

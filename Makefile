@@ -30,3 +30,9 @@ ingest:
 
 benchmark:
 	docker run --net="host" --rm anafrombr/go-wrk -redir -c 100 -d 30  http://0.0.0.0:80/live/hls/signal-1/index.m3u8
+
+build-plot:
+	docker build results -t vts-plot
+
+plot:build-plot
+	docker run  -it -v $(PWD)/results:/files --network host --rm vts-plot
