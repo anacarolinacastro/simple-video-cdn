@@ -27,14 +27,24 @@ for i, port in enumerate(range(first_port, last_port + 1)):
 
     hit = res['cacheZones']['cdn_cache']['responses']['hit']
     expired = res['cacheZones']['cdn_cache']['responses']['expired']
+    updating = res['cacheZones']['cdn_cache']['responses']['updating']
     miss = res['cacheZones']['cdn_cache']['responses']['miss']
+    total = hit + expired + updating + miss
+    requests_total += total
 
-    statys_2xx = res['serverZones']['_']['responses']['2xx']
+    data.append({"id": i+1, "Cache status": "hit", "count": hit})
+    data.append({"id": i+1, "Cache status": "expire", "count": expired})
+    data.append({"id": i+1, "Cache status": "updating", "count": updating})
+    data.append({"id": i+1, "Cache status": "miss", "count": miss})
 
-    requests = res['connections']['requests']
+    f.write("[CACHE " + str(i+1) + "] (port " + str(port) +")\n")
+    f.write("hit: " + str(hit) + "\n")
+    f.write("expire: " + str(expired) + "\n")
+    f.write("updating: " + str(updating) + "\n")
+    f.write("miss: " + str(miss) + "\n")
+    f.write("sum: " + str(total) + "\n\n")
 
-    d = {'cache status': ['hit', 'expired', 'miss'],
-        'count': [hit, expired, miss]}
+f.write("total requests: " + str(requests_total) + "\n\n")
 
     df = pd.DataFrame(d)
     f.write(str(port))
