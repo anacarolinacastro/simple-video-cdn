@@ -1,1 +1,4 @@
+.vscode
+/results/*.png
+/results/*.txt
 /healthchecker/healthchecker
