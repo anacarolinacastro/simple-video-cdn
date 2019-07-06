@@ -1,3 +1,5 @@
+.PHONY: benchmark
+
 CACHE_PORTS_RANGE ?= 8090-8091
 CACHE_POOL_SIZE ?= 2
 LB_ALGORITM ?= round_robin
