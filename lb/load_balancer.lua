@@ -2,6 +2,7 @@ local redis = require "resty.redis"
 
 local load_balancer = {}
 local index_reference = 1
+local redis_timeout = 5000
 
 -- -- get the decision algoritmn from environment variable
 -- local function get_algoritm()
@@ -25,29 +26,7 @@ end
 -- list all health servers from redis
 function get_health_servers()
     local red = redis:new()
-    red:set_timeout(1000)
-    red:connect("172.22.0.100", 6379)
-
-    local first, last = get_first_and_last_ports()
-    local a = {}
-
-    for i=0, (last-first) do
-        local port = first+i
-        local conns = red:get(port)
-
-        if conns then
-            a[i+1] = math.floor(port)
-        end
-    end
-
-    red:set_keepalive(10000, 100)
-    return a
-end
-
--- table with all health servers from redis with their active connections number
-function get_health_servers_with_connections()
-    local red = redis:new()
-    red:set_timeout(1000)
+    red:set_timeout(redis_timeout)
     red:connect("172.22.0.100", 6379)
 
     local first, last = get_first_and_last_ports()
@@ -92,20 +71,30 @@ end
 
 load_balancer.least_conn = function()
     local red = redis:new()
-    red:set_timeout(1000)
-    red:connect("172.22.0.100", 6379)
+    red:set_timeout(redis_timeout)
+    local ok, err = red:connect("172.22.0.100", 6379)
+
+    if not ok then
+        ngx.log(ngx.ERR, "Fail to connect to redis: " ..  err)
+        return
+    end
 
     local first, last = get_first_and_last_ports()
 
-    local port = first
-    local conns = tonumber(red:get(port))
-
-    local least_conn_port = port
-    local least_conn_conns = conns
+    local least_conn_port = first
+    local least_conn_conns = tonumber(red:get(first))
 
     for i=1, (last-first) do
-        port = first+i
-        conns = tonumber(red:get(port))
+        local port = first+i
+        local conns = tonumber(red:get(port))
+
+        if conns == nil then
+            ngx.log(ngx.ERR, "Port is nil")
+        end
+
+        if least_conn_conns == nil then
+            ngx.log(ngx.ERR, "least_conn_conns is nil ")
+        end
 
         if conns < least_conn_conns then
             least_conn_port = port
