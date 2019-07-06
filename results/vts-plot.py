@@ -46,22 +46,14 @@ for i, port in enumerate(range(first_port, last_port + 1)):
 
 f.write("total requests: " + str(requests_total) + "\n\n")
 
-    df = pd.DataFrame(d)
-    f.write(str(port))
-    f.write("\n")
-    f.write(df.to_string())
-    f.write("\n")
-    f.write("--------------------------------------")
-    f.write("\n")
-    f.write("\n")
+df = pd.DataFrame(data)
 
-    print(df)
-
-    p = (ggplot(df) +
-    geom_bar(aes(x='cache status', y='count'), stat='identity') +
-         ggtitle(algoritm + ' ('+str(port)+')')
+p = (ggplot(df, aes(x='Cache status', y='count')) +
+    geom_bar(aes(fill = 'factor(id)'), stat='identity') +
+    labs(fill="Cache") +
+    ggtitle(algoritm)
     )
 
-    ggsave(plot=p, filename=str(port), path="/files/"+algoritm)
+ggsave(plot=p, filename=algoritm, path="/files/")
 
 f.close()
