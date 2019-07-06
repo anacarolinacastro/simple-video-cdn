@@ -45,15 +45,15 @@ for i, port in enumerate(range(first_port, last_port + 1)):
     f.write("sum: " + str(total) + "\n\n")
 
 f.write("total requests: " + str(requests_total) + "\n\n")
+f.close()
 
 df = pd.DataFrame(data)
 
 p = (ggplot(df, aes(x='Cache status', y='count')) +
     geom_bar(aes(fill = 'factor(id)'), stat='identity') +
     labs(fill="Cache") +
+    theme_xkcd() +
     ggtitle(algoritm)
     )
 
 ggsave(plot=p, filename=algoritm, path="/files/")
-
-f.close()
