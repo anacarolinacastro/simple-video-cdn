@@ -53,7 +53,7 @@ func getRedis() *redis.Client {
 
 func setLoad(port, value string) {
 	key := port
-	redisClient.Set(key, value, 10*time.Second)
+	redisClient.Set(key, value, 15*time.Second)
 }
 
 func statusCheck(port int) {
