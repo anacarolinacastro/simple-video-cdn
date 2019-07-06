@@ -52,4 +52,4 @@ build-plot:
 	docker build results -t vts-plot
 
 plot:build-plot
-	docker run  -it -v $(PWD)/results:/files --network host --rm vts-plot
+	docker run  --env LB_ALGORITM=$(LB_ALGORITM) --env CACHE_PORTS_RANGE=$(CACHE_PORTS_RANGE) -it -v $(PWD)/results:/files --network host --rm vts-plot

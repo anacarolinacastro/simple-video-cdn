@@ -2,7 +2,7 @@ import pandas as pd
 from plotnine import *
 import urllib.request
 import json
-
+import os
 
 def get_json(url):
     req = urllib.request.Request(url)
@@ -10,13 +10,18 @@ def get_json(url):
     f = opener.open(req)
     return json.loads(f.read())
 
+ports_range = os.environ['CACHE_PORTS_RANGE'].split('-')
 
-# shoul get those as env var
-ports = [8090, 8091, 8092, 8093, 8094]
-algoritm = "round-robin"
-f = open("/files/"+algoritm+"/results.txt", "w")
+algoritm = os.environ['LB_ALGORITM'].capitalize()
+f = open("/files/" + algoritm + ".txt", "w")
 
-for i, port in enumerate(ports):
+data = []
+first_port = int(ports_range[0])
+last_port = int(ports_range[1])
+
+requests_total = 0
+
+for i, port in enumerate(range(first_port, last_port + 1)):
     url = "http://0.0.0.0:"+str(port)+"/status"
     res = get_json(url)
 
