@@ -4,16 +4,6 @@ local load_balancer = {}
 local index_reference = 1
 local redis_timeout = 5000
 
--- -- get the decision algoritmn from environment variable
--- local function get_algoritm()
---     return os.getenv("LB_ALGORITM")
--- end
-
--- -- get caches ports range from environment varible
--- local function get_ports_range_from_env()
---     return
--- end
-
 -- get first and last port from the string range
 local function get_first_and_last_ports()
     local ports_range = os.getenv("CACHE_PORTS_RANGE")
