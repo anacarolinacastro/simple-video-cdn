@@ -4,6 +4,9 @@ CACHE_PORTS_RANGE ?= 8090-8091
 CACHE_POOL_SIZE ?= 2
 LB_ALGORITM ?= round_robin
 
+available-algoritms:
+	@echo random round_robin least_conn consistent_hash
+
 build-origin:
 	docker build -t nginx-rtmp .
 
