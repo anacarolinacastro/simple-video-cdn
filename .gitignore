@@ -1,4 +1,5 @@
 .vscode
 /results/*.png
 /results/*.txt
+/results/benchmark
 /healthchecker/healthchecker

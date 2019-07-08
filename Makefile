@@ -31,22 +31,7 @@ ingest:
         -window_size 5  -extra_window_size 10 -remove_at_exit 1 -adaptation_sets "id=0,streams=v id=1,streams=a" -f mpegts http://127.0.0.1:8080/ingest/signal-1
 
 benchmark:
-	osascript AppleScript.scpt
-
-benchmark-signal1:
-	docker run --net="host" --rm anafrombr/go-wrk -redir -T 5000 -c 100 -d 30  http://0.0.0.0:80/live/hls/signal-1/index.m3u8
-
-benchmark-signal2:
-	docker run --net="host" --rm anafrombr/go-wrk -redir -T 5000 -c 100 -d 30  http://0.0.0.0:80/live/hls/signal-2/index.m3u8
-
-benchmark-signal3:
-	docker run --net="host" --rm anafrombr/go-wrk -redir -T 5000 -c 100 -d 30  http://0.0.0.0:80/live/hls/signal-3/index.m3u8
-
-benchmark-signal4:
-	docker run --net="host" --rm anafrombr/go-wrk -redir -T 5000 -c 100 -d 30  http://0.0.0.0:80/live/hls/signal-4/index.m3u8
-
-benchmark-signal5:
-	docker run --net="host" --rm anafrombr/go-wrk -redir -T 5000 -c 100 -d 30  http://0.0.0.0:80/live/hls/signal-5/index.m3u8
+	./benchmark.sh
 
 build-plot:
 	docker build results -t vts-plot
