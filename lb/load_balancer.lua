@@ -13,8 +13,9 @@ local function get_first_and_last_ports()
     return first, last
 end
 
+
 -- list all health servers from redis
-function get_health_servers()
+local function get_health_servers()
     local red = redis:new()
     red:set_timeout(redis_timeout)
     red:connect("172.22.0.100", 6379)
