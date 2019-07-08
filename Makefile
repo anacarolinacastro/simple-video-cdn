@@ -3,6 +3,7 @@
 CACHE_PORTS_RANGE ?= 8090-8091
 CACHE_POOL_SIZE ?= 2
 LB_ALGORITM ?= round_robin
+SIGNALS ?= 5
 
 available-algoritms:
 	@echo random round_robin least_conn consistent_hash
@@ -34,7 +35,7 @@ ingest:
         -window_size 5  -extra_window_size 10 -remove_at_exit 1 -adaptation_sets "id=0,streams=v id=1,streams=a" -f mpegts http://127.0.0.1:8080/ingest/signal-1
 
 benchmark:
-	./benchmark.sh
+	./benchmark.sh $(LB_ALGORITM) $(SIGNALS)
 
 build-plot:
 	docker build results -t vts-plot
