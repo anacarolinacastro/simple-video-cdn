@@ -4,6 +4,8 @@ CACHE_PORTS_RANGE ?= 8090-8091
 CACHE_POOL_SIZE ?= 2
 LB_ALGORITM ?= round_robin
 SIGNALS ?= 5
+CONSISTENCY_LEVEL ?= 100
+REPLICAS_PER_CACHE ?= 4
 
 available-algoritms:
 	@echo random round_robin least_conn consistent_hash
@@ -18,10 +20,10 @@ build:
 	LB_ALGORITM=$(LB_ALGORITM) CACHE_PORTS_RANGE=$(CACHE_PORTS_RANGE) docker-compose build
 
 run: build
-	LB_ALGORITM=$(LB_ALGORITM) CACHE_PORTS_RANGE=$(CACHE_PORTS_RANGE) docker-compose up --scale cache=$(CACHE_POOL_SIZE)
+	CONSISTENCY_LEVEL=$(CONSISTENCY_LEVEL) REPLICAS_PER_CACHE=$(REPLICAS_PER_CACHE) LB_ALGORITM=$(LB_ALGORITM) CACHE_PORTS_RANGE=$(CACHE_PORTS_RANGE) docker-compose up --scale cache=$(CACHE_POOL_SIZE)
 
 down:
-	LB_ALGORITM=$(LB_ALGORITM) CACHE_PORTS_RANGE=$(CACHE_PORTS_RANGE) docker-compose down
+	CONSISTENCY_LEVEL=$(CONSISTENCY_LEVEL) REPLICAS_PER_CACHE=$(REPLICAS_PER_CACHE) LB_ALGORITM=$(LB_ALGORITM) CACHE_PORTS_RANGE=$(CACHE_PORTS_RANGE) docker-compose down
 
 ingest:
 	docker run --net="host" --rm -v $(shell pwd):/files jrottenberg/ffmpeg:4.1 -hide_banner \

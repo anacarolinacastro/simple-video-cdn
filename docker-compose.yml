@@ -17,6 +17,8 @@ services:
     environment:
       LB_ALGORITM: "${LB_ALGORITM}"
       CACHE_PORTS_RANGE: "${CACHE_PORTS_RANGE}"
+      CONSISTENCY_LEVEL: "${CONSISTENCY_LEVEL}"
+      REPLICAS_PER_CACHE: "${REPLICAS_PER_CACHE}"
 
   cache:
     image: marrotte/openresty-vts-sts
