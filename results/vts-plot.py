@@ -12,8 +12,11 @@ def get_json(url):
 
 ports_range = os.environ['CACHE_PORTS_RANGE'].split('-')
 
-algoritm = os.environ['LB_ALGORITM'].capitalize()
+algoritm = os.environ['LB_ALGORITM']
+title_algoritm = os.environ['LB_ALGORITM'].capitalize().replace("_", " ")
+
 f = open("/files/" + algoritm + ".txt", "w")
+f.write("---- " + title_algoritm + " ----\n")
 
 data = []
 first_port = int(ports_range[0])
@@ -25,10 +28,18 @@ for i, port in enumerate(range(first_port, last_port + 1)):
     url = "http://0.0.0.0:"+str(port)+"/status"
     res = get_json(url)
 
-    hit = res['cacheZones']['cdn_cache']['responses']['hit']
-    expired = res['cacheZones']['cdn_cache']['responses']['expired']
-    updating = res['cacheZones']['cdn_cache']['responses']['updating']
-    miss = res['cacheZones']['cdn_cache']['responses']['miss']
+    has_cache = res.get('cacheZones', False)
+    if has_cache:
+        hit = res['cacheZones']['cdn_cache']['responses']['hit']
+        expired = res['cacheZones']['cdn_cache']['responses']['expired']
+        updating = res['cacheZones']['cdn_cache']['responses']['updating']
+        miss = res['cacheZones']['cdn_cache']['responses']['miss']
+    else:
+        hit = 0
+        expired = 0
+        updating = 0
+        miss = 0
+
     total = hit + expired + updating + miss
     requests_total += total
 
@@ -52,8 +63,7 @@ df = pd.DataFrame(data)
 p = (ggplot(df, aes(x='Cache status', y='count')) +
     geom_bar(aes(fill = 'factor(id)'), stat='identity') +
     labs(fill="Cache") +
-    theme_xkcd() +
-    ggtitle(algoritm)
+     ggtitle(title_algoritm)
     )
 
 ggsave(plot=p, filename=algoritm, path="/files/")
