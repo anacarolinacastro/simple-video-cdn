@@ -37,7 +37,7 @@ func main() {
 		for port := firstPort; port <= lastPort; port++ {
 			go statusCheck(port)
 		}
-		time.Sleep(10 * time.Second)
+		time.Sleep(1 * time.Second)
 	}
 }
 
@@ -53,7 +53,7 @@ func getRedis() *redis.Client {
 
 func setLoad(port, value string) {
 	key := port
-	redisClient.Set(key, value, 15*time.Second)
+	redisClient.Set(key, value, 5*time.Second)
 }
 
 func statusCheck(port int) {
