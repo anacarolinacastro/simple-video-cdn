@@ -3,7 +3,7 @@ local redis = require "resty.redis"
 local load_balancer = {}
 local index_reference = 1
 local redis_timeout = 5000
-local consistency_level = tonumber(os.getenv("CONSISTENCY_LEVEL"))
+local nodes = tonumber(os.getenv("NODES"))
 local replicas_per_cache = tonumber(os.getenv("REPLICAS_PER_CACHE"))
 
 -- get first and last port from the string range
@@ -71,7 +71,7 @@ local function get_hash_key(string)
     local first, last = get_first_and_last_ports()
     local cache_size = last - first + 1
     local hash = get_hash(string)
-    local key = hash % consistency_level + 1
+    local key = hash % nodes + 1
 
     return key
 end
@@ -79,7 +79,7 @@ end
 local function set_ring()
     ngx.log(ngx.ERR, "Setting up ring") -- remove this, this is only to check how many times this function is being called
     local ring = {}
-    for c=1, consistency_level do
+    for c=1, nodes do
         ring[c] = nil
     end
 
@@ -182,8 +182,9 @@ load_balancer.consistent_hash = function()
             end
         end
 
+        -- try the next node
         k = k + 1
-        if k > consistency_level then
+        if k > nodes then
             k = 1
         end
 
