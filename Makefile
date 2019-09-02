@@ -8,7 +8,7 @@ NODES ?= 100
 REPLICAS_PER_CACHE ?= 4
 
 available-algoritms:
-	@echo random round_robin least_conn consistent_hash
+	@echo random round_robin least_conn consistent_hash consistent_hash_bound_load
 
 build-origin:
 	docker build -t nginx-rtmp .
@@ -21,6 +21,9 @@ build:
 
 run: build
 	NODES=$(NODES) REPLICAS_PER_CACHE=$(REPLICAS_PER_CACHE) LB_ALGORITM=$(LB_ALGORITM) CACHE_PORTS_RANGE=$(CACHE_PORTS_RANGE) docker-compose up --scale cache=$(CACHE_POOL_SIZE)
+
+lint:
+	NODES=$(NODES) REPLICAS_PER_CACHE=$(REPLICAS_PER_CACHE) LB_ALGORITM=$(LB_ALGORITM) CACHE_PORTS_RANGE=$(CACHE_PORTS_RANGE) docker-compose run --rm lint
 
 down:
 	NODES=$(NODES) REPLICAS_PER_CACHE=$(REPLICAS_PER_CACHE) LB_ALGORITM=$(LB_ALGORITM) CACHE_PORTS_RANGE=$(CACHE_PORTS_RANGE) docker-compose down

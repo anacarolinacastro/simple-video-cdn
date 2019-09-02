@@ -46,6 +46,13 @@ services:
       service1_net:
         ipv4_address: 172.22.0.100
 
+  # lint:
+  #   command: sh -c "luacheck -q ."
+  #   build: ./lb
+  #   volumes:
+  #     - ".:/lua/"
+  #   working_dir: "/lua"
+
   healthchecker:
     image: golang:1.12
     volumes:

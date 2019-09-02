@@ -19,7 +19,8 @@ RUN wget 45.33.61.132/releases/luarocks-3.1.3.tar.gz && \
     make bootstrap
 
 RUN luarocks install lua-resty-redis && \
-    luarocks install lua-resty-string
+    luarocks install lua-resty-string && \
+    luarocks install luacheck
 
 COPY nginx-lb.conf /usr/local/openresty/nginx/conf/nginx.conf
 COPY load_balancer.lua /usr/local/openresty/nginx/conf/load_balancer.lua
