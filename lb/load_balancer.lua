@@ -6,6 +6,14 @@ local redis_timeout = 5000
 local nodes = tonumber(os.getenv("NODES"))
 local replicas_per_cache = tonumber(os.getenv("REPLICAS_PER_CACHE"))
 
+local function redis_conn()
+    local red = redis:new()
+    red:set_timeout(redis_timeout)
+    red:connect("172.22.0.100", 6379)
+
+    return red
+end
+
 -- get first and last port from the string range
 local function get_first_and_last_ports()
     local ports_range = os.getenv("CACHE_PORTS_RANGE")
@@ -15,15 +23,12 @@ local function get_first_and_last_ports()
     return first, last
 end
 
-
 -- list all health servers from redis
 local function check_server_health(port)
-    local red = redis:new()
-    red:set_timeout(redis_timeout)
-    red:connect("172.22.0.100", 6379)
+    local red = redis_conn()
 
-    local conns, err = red:get(port)
-    red:set_keepalive(10000, 100)
+    local conns = red:get(port)
+    red:set_keepalive(10000,100)
 
     if tonumber(conns) then
         return true
@@ -33,9 +38,7 @@ local function check_server_health(port)
 end
 
 local function get_health_servers()
-    local red = redis:new()
-    red:set_timeout(redis_timeout)
-    red:connect("172.22.0.100", 6379)
+    local red = redis_conn()
 
     local first, last = get_first_and_last_ports()
     local a = {}
