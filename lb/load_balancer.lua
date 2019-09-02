@@ -71,8 +71,6 @@ end
 
 
 local function get_hash_key(string)
-    local first, last = get_first_and_last_ports()
-    local cache_size = last - first + 1
     local hash = get_hash(string)
     local key = hash % nodes + 1
 
@@ -80,15 +78,17 @@ local function get_hash_key(string)
 end
 
 local function set_ring()
-    ngx.log(ngx.ERR, "Setting up ring") -- remove this, this is only to check how many times this function is being called
+    ngx.log(ngx.DEBUG, "Setting up ring")
     local ring = {}
+    local first, last = get_first_and_last_ports()
+
     for c=1, nodes do
         ring[c] = nil
     end
 
-    local first, last = get_first_and_last_ports()
     for i=0, (last-first) do
         local port = first+i
+
         for r=1, replicas_per_cache do
             local vport = tostring(port) .. tostring(r)
             local key = get_hash_key(vport)
