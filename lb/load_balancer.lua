@@ -101,6 +101,65 @@ end
 
 local ring = set_ring()
 
+local function set_load(port)
+    local ports_load = ngx.shared.ports_load
+
+    ports_load:incr(port, 1, 0)
+    ports_load:incr("load", 1, 0)
+end
+
+local function get_total_load()
+    local ports_load = ngx.shared.ports_load
+    local sum = ports_load:get("load")
+
+    if sum == nil then
+        sum = 0
+    end
+
+    return sum
+end
+
+local function get_load(port)
+    local ports_load = ngx.shared.ports_load
+    local res = ports_load:get(port)
+
+    if res == nil then
+        res = 0
+    end
+
+    return res
+end
+
+local function get_all_loads()
+    local load = {}
+    local first, last = get_first_and_last_ports()
+    for i=0, (last-first) do
+        local port = first+i
+        load[port] = get_load(port)
+    end
+
+    return load
+end
+
+local function load_ok(port)
+    local load = get_all_loads()
+    local total_load = get_total_load()
+    local avg = math.ceil((total_load + 1)/nodes)
+    local max_load = (avg * 20)
+
+    ngx.log(ngx.DEBUG, "avg: " ..  avg)
+    ngx.log(ngx.DEBUG, "total load: " ..  total_load)
+    ngx.log(ngx.DEBUG, "load: " ..  load[port])
+    ngx.log(ngx.DEBUG, "max load: " ..  max_load)
+
+
+    if (load[port]+1) <= max_load then
+        return true
+    end
+
+    return false
+end
+
 -- call the method for the decision algoritmn chosen
 load_balancer.cache = function()
     local cache = load_balancer[os.getenv("LB_ALGORITM")]()
@@ -194,11 +253,62 @@ load_balancer.consistent_hash = function()
         flag = true
     end
 
+    -- ngx.log(ngx.ERR, signal_name .. "->" .. port)
+
+    if false then -- port == nil then
+        local ports = get_health_servers()
+        port = ports[math.random(1,#ports)]
+    end
+
     return "http://0.0.0.0:" .. port
 end
 
--- TODO --
 load_balancer.consistent_hash_bound_load = function()
+    local signal_name = ngx.var.signal
+    local key = get_hash_key(signal_name)
+    local found = false
+    local k = key
+    local port
+    local flag = false
+
+    while not found do
+        port = ring[k]
+
+        if port then
+            -- ngx.log(ngx.ERR, "port[".. k .. "] = " .. port)
+            local health = check_server_health(port)
+            if health and load_ok(port) then
+                found = true
+            end
+        else
+            if k == key and flag then -- wrap around
+                return
+            end
+        end
+
+        -- try the next node
+        k = k + 1
+        if k > nodes then
+            k = 1
+        end
+
+        flag = true
+    end
+
+
+    if false then -- port == nil then
+        local ports = get_health_servers()
+
+        if #ports == 0 then
+            ngx.log(ngx.ERR, "SEM SERVERS SAUDAVEIS")
+        end
+
+        port = ports[math.random(1,#ports)]
+    else
+        set_load(port)
+    end
+
+    return "http://0.0.0.0:" .. port
 end
 
 -- returns the load_balancer object
