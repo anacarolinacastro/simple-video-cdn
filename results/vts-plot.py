@@ -3,6 +3,7 @@ from plotnine import *
 import urllib.request
 import json
 import os
+from datetime import datetime
 
 def get_json(url):
     req = urllib.request.Request(url)
@@ -16,11 +17,27 @@ algoritm = os.environ['LB_ALGORITM']
 title_algoritm = os.environ['LB_ALGORITM'].capitalize().replace("_", " ")
 
 f = open("/files/" + algoritm + ".txt", "w")
+f.write("---- " + datetime.now().strftime("%d/%m/%Y %H:%M:%S") + " ----\n")
 f.write("---- " + title_algoritm + " ----\n")
+
+t = open("/files/" + algoritm + "-table.txt", "w")
+t.write("\\begin{center}\n")
+t.write("\\begin{center}\n")
+t.write("\\captionsetup{justification=centering}\n")
+t.write("\\captionof{table}{Estatisticas de cache para o algoritmo \\textit{" + title_algoritm + "}.}\label{tab:"+title_algoritm+"}\n")
+t.write("\\begin{tabular}{ ccccccccccc }\n")
+t.write("\\textbf{Cache}&\\textbf{Port}&\\textbf{Hit}&\\textbf{Expire}&\\textbf{Updating}&\\textbf{Miss}\n")
+t.write("\\\\\n")
+t.write("\hline\n")
 
 data = []
 first_port = int(ports_range[0])
 last_port = int(ports_range[1])
+
+total_hit = 0
+total_expired = 0
+total_updating = 0
+total_miss = 0
 
 requests_total = 0
 
@@ -41,12 +58,21 @@ for i, port in enumerate(range(first_port, last_port + 1)):
         miss = 0
 
     total = hit + expired + updating + miss
+    total_hit += hit
+    total_expired += expired
+    total_updating += updating
+    total_miss += miss
     requests_total += total
 
-    data.append({"id": i+1, "Cache status": "hit", "count": hit})
-    data.append({"id": i+1, "Cache status": "expire", "count": expired})
-    data.append({"id": i+1, "Cache status": "updating", "count": updating})
-    data.append({"id": i+1, "Cache status": "miss", "count": miss})
+    cache_id = i + 1
+
+    data.append({"id": cache_id, "Cache status": "hit", "count": hit})
+    data.append({"id": cache_id, "Cache status": "expire", "count": expired})
+    data.append({"id": cache_id, "Cache status": "updating", "count": updating})
+    data.append({"id": cache_id, "Cache status": "miss", "count": miss})
+
+    t.write(str(cache_id) + "&" + str(port) + "&" + str(hit) + "&" +
+            str(expired) + "&" + str(updating) + "&" + str(miss) + "\\\\\n")
 
     f.write("[CACHE " + str(i+1) + "] (port " + str(port) +")\n")
     f.write("hit: " + str(hit) + "\n")
@@ -55,15 +81,55 @@ for i, port in enumerate(range(first_port, last_port + 1)):
     f.write("miss: " + str(miss) + "\n")
     f.write("sum: " + str(total) + "\n\n")
 
+
+    df = pd.DataFrame(data)
+
 f.write("total requests: " + str(requests_total) + "\n\n")
 f.close()
 
-df = pd.DataFrame(data)
+t.write("\\hline\n")
+t.write("all&-&" + str(total_hit) + "&" + str(total_expired) + "&" + str(total_updating) + "&" + str(total_miss) + "\\\\\n")
+t.write("\\end{tabular}\n")
+t.write("\\end{center}\n")
+t.write("\\vspace{3mm}\n")
+t.write("Fonte: A autora, \\UERJano.\n")
+t.write("\\end{center}\n")
+t.write("\\vspace{3mm}\n")
+t.close()
 
-p = (ggplot(df, aes(x='Cache status', y='count')) +
-    geom_bar(aes(fill = 'factor(id)'), stat='identity') +
-    labs(fill="Cache") +
-     ggtitle(title_algoritm)
-    )
+# p = (ggplot(df, aes(x='Cache status', y='count')) +
+#     geom_bar(aes(fill = 'factor(id)'), stat='identity') +
+#     labs(fill="Cache") +
+#      ggtitle(title_algoritm)
+#     )
 
-ggsave(plot=p, filename=algoritm, path="/files/")
+# ggsave(plot=p, filename=algoritm, path="/files/")
+
+
+# def make_table(algritm, title_algoritm, data):
+#     t = open("/files/" + algoritm + "-table.txt", "w")
+#     data.
+#     t.write("\\begin{center}\n")
+#     t.write("\\begin{center}\n")
+#     t.write("\\captionsetup{justification=centering}\n")
+#     t.write(
+#         "\\captionof{table}{Estatisticas de cache para o algoritmo \\textit{" + title_algoritm + "}.}\label{tab:"+title_algoritm+"}\n")
+#     t.write("\\begin{tabular}{ ccccccccccc }\n")
+#     t.write(
+#         "\\textbf{Cache}&\\textbf{Port}&\\textbf{Hit}&\\textbf{Expire}&\\textbf{Updating}&\\textbf{Miss}\n")
+#     t.write("\\\\\n")
+#     t.write("\hline\n")
+#     t.write("1&8090&5704&28&31&10\\\\\n")
+#     t.write("2&8091&5601&28&18&10\\\\\n")
+#     t.write("3&8092&5430&29&24&10\\\\\n")
+#     t.write("4&8093&5612&30&34&10\\\\\n")
+#     t.write("5&8094&5672&29&26&10\\\\\n")
+#     t.write("\\hline\n")
+#     t.write("all&-&28019&144&133&50\\\\\n")
+#     t.write("\\end{tabular}\n")
+#     t.write("\\end{center}\n")
+#     t.write("\\vspace{3mm}\n")
+#     t.write("Fonte: A autora, \\UERJano.\n")
+#     t.write("\\end{center}\n")
+#     t.write("\\vspace{3mm}\n")
+#     t.close()
