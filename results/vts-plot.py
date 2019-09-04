@@ -104,32 +104,3 @@ t.close()
 #     )
 
 # ggsave(plot=p, filename=algoritm, path="/files/")
-
-
-# def make_table(algritm, title_algoritm, data):
-#     t = open("/files/" + algoritm + "-table.txt", "w")
-#     data.
-#     t.write("\\begin{center}\n")
-#     t.write("\\begin{center}\n")
-#     t.write("\\captionsetup{justification=centering}\n")
-#     t.write(
-#         "\\captionof{table}{Estatisticas de cache para o algoritmo \\textit{" + title_algoritm + "}.}\label{tab:"+title_algoritm+"}\n")
-#     t.write("\\begin{tabular}{ ccccccccccc }\n")
-#     t.write(
-#         "\\textbf{Cache}&\\textbf{Port}&\\textbf{Hit}&\\textbf{Expire}&\\textbf{Updating}&\\textbf{Miss}\n")
-#     t.write("\\\\\n")
-#     t.write("\hline\n")
-#     t.write("1&8090&5704&28&31&10\\\\\n")
-#     t.write("2&8091&5601&28&18&10\\\\\n")
-#     t.write("3&8092&5430&29&24&10\\\\\n")
-#     t.write("4&8093&5612&30&34&10\\\\\n")
-#     t.write("5&8094&5672&29&26&10\\\\\n")
-#     t.write("\\hline\n")
-#     t.write("all&-&28019&144&133&50\\\\\n")
-#     t.write("\\end{tabular}\n")
-#     t.write("\\end{center}\n")
-#     t.write("\\vspace{3mm}\n")
-#     t.write("Fonte: A autora, \\UERJano.\n")
-#     t.write("\\end{center}\n")
-#     t.write("\\vspace{3mm}\n")
-#     t.close()
