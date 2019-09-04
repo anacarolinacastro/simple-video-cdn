@@ -1,4 +1,5 @@
 .vscode
+benchmark-*-table.txt
 /results/*.png
 /results/*.txt
 /results/benchmark
