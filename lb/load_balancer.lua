@@ -144,14 +144,10 @@ end
 local function load_ok(port)
     local load = get_all_loads()
     local total_load = get_total_load()
-    local avg = math.ceil((total_load + 1)/nodes)
-    local max_load = (avg * 20)
+    local avg = math.ceil((total_load + 1)/5) -- /<number of caches>
+    local max_load = avg * 1.25
 
-    ngx.log(ngx.DEBUG, "avg: " ..  avg)
-    ngx.log(ngx.DEBUG, "total load: " ..  total_load)
-    ngx.log(ngx.DEBUG, "load: " ..  load[port])
-    ngx.log(ngx.DEBUG, "max load: " ..  max_load)
-
+    -- ngx.log(ngx.DEBUG, "port: " .. port .. "| avg: " ..  avg .. " | total load: " ..  total_load .. " | load: " ..  load[port] .. " | max load: " ..  max_load)
 
     if (load[port]+1) <= max_load then
         return true
