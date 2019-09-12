@@ -6,7 +6,7 @@ A minimal CDN for load balance studies purposes.
 
 #### Docker services
 
-- *simple-video-cdn_origin_1:* packager/origin
+- *simple-video-cdn_origin_1:* ingest/packager/origin
 - *simple-video-cdn_cache_N:* cache server N
 - *simple-video-cdn_lb_1:* load balancer
 - *simple-video-cdn_healthchecker_1:* go application that do the health check
